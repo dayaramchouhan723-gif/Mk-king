@@ -1,0 +1,6 @@
+{
+  "name": "MYRA KYRA AI",
+  "description": "MYRA KYRA AI v2.0 - DUAL GODDESS COMMAND. 22-in-1 Multi-Agent Hub, V3NOX Dual Orb, 40+ Voice Library, Wake Words, 12 Personas, 24 Master Tools, and PC Controller.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
