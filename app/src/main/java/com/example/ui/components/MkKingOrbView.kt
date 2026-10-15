@@ -346,10 +346,10 @@ private fun MkKingV3noxOrbCore(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(260.dp),
+                .height(275.dp),
             contentAlignment = Alignment.Center
         ) {
-            // Bottom 3D Particle Globe - Increased to 220dp with optimized 60fps drawing
+            // Bottom 3D Particle Globe - 220dp with optimized 60fps drawing on Android 11
             // NO play triangle path/drawing inside the particle globe: ONLY particles rendered
             Box(
                 modifier = Modifier
@@ -417,7 +417,7 @@ private fun MkKingV3noxOrbCore(
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    // Glowing royal energy core with microphone indicator
+                    // Glowing royal energy core with microphone indicator (no play button)
                     Icon(
                         imageVector = Icons.Default.Mic,
                         contentDescription = "Trigger Voice",
@@ -471,9 +471,9 @@ private fun MkKingV3noxOrbCore(
 }
 
 /**
- * High-performance 60fps particle globe rendering logic.
- * Exclusively renders 3D orbiting particles with precomputed trig values.
- * Completely free of any play triangle paths or overlays.
+ * Ultra-smooth 60fps particle globe rendering logic optimized for Android 11 / MediaTek Helio G85 devices.
+ * Pre-computes trigonometry, avoids memory allocation inside draw loop, and eliminates redundant divisions.
+ * Exclusively renders 3D orbiting particles: completely free of any play triangle paths or overlays.
  */
 private fun renderOptimizedParticleGlobe(
     drawScope: DrawScope,
@@ -482,53 +482,57 @@ private fun renderOptimizedParticleGlobe(
     rmsLevel: Float
 ) {
     val size = drawScope.size
-    val center = Offset(size.width * 0.5f, size.height * 0.5f)
+    val centerX = size.width * 0.5f
+    val centerY = size.height * 0.5f
     val globeRadius = size.width * 0.44f
     val rotRad = rotationDeg * (PI.toFloat() / 180f)
-    val invRadius = 1f / globeRadius
 
-    // Faint atmospheric glow background
+    // Faint atmospheric glow background behind particles
     drawScope.drawCircle(
-        color = RoyalRed.copy(alpha = 0.18f),
+        color = RoyalRed.copy(alpha = 0.16f),
         radius = globeRadius,
-        center = center
+        center = Offset(centerX, centerY)
     )
 
-    // Green edge telemetry markings
+    // Green edge telemetry markings (as in screenshot)
     val markerOffset = globeRadius + 3f
     drawScope.drawLine(
         color = NeonGreen.copy(alpha = 0.65f),
-        start = Offset(center.x - markerOffset, center.y - 12f),
-        end = Offset(center.x - markerOffset, center.y + 12f),
+        start = Offset(centerX - markerOffset, centerY - 12f),
+        end = Offset(centerX - markerOffset, centerY + 12f),
         strokeWidth = 2.5f
     )
     drawScope.drawLine(
         color = NeonGreen.copy(alpha = 0.65f),
-        start = Offset(center.x + markerOffset, center.y - 12f),
-        end = Offset(center.x + markerOffset, center.y + 12f),
+        start = Offset(centerX + markerOffset, centerY - 12f),
+        end = Offset(centerX + markerOffset, centerY + 12f),
         strokeWidth = 2.5f
     )
 
-    // Optimized particle iteration: zero object allocation in the loop for 60fps smooth rendering
+    // Ultra-optimized particle iteration: zero heap allocation inside the loop
+    val rmsBonus = rmsLevel * 0.35f
     for (i in particles.indices) {
         val p = particles[i]
         val currentTheta = p.theta + rotRad * p.speed
         val sinTheta = sin(currentTheta)
         val cosTheta = cos(currentTheta)
 
-        // Leverage precomputed cosPhi and sinPhi
-        val x3d = globeRadius * p.cosPhi * sinTheta
+        // y is invariant to Y-axis rotation; computed using precomputed sinPhi
         val y3d = globeRadius * p.sinPhi
-        val z3d = globeRadius * p.cosPhi * cosTheta
+        // x and z leverage precomputed cosPhi
+        val radiusCosPhi = globeRadius * p.cosPhi
+        val x3d = radiusCosPhi * sinTheta
 
-        val depthFactor = (z3d * invRadius + 1f) * 0.5f
-        val scaleFactor = 0.55f + depthFactor * 0.7f + (rmsLevel * 0.35f)
-        val alpha = (0.25f + depthFactor * 0.75f).coerceIn(0.12f, 1f)
+        // Normalized z depth: (z3d / globeRadius) = p.cosPhi * cosTheta (zero division required!)
+        val normZ = p.cosPhi * cosTheta
+        val depthFactor = (normZ + 1f) * 0.5f
+        val scaleFactor = 0.55f + depthFactor * 0.7f + rmsBonus
+        val alpha = (0.22f + depthFactor * 0.78f).coerceIn(0.12f, 1f)
 
         drawScope.drawCircle(
             color = p.color.copy(alpha = alpha),
             radius = p.baseRadius * scaleFactor,
-            center = Offset(center.x + x3d, center.y + y3d)
+            center = Offset(centerX + x3d, centerY + y3d)
         )
     }
 }
