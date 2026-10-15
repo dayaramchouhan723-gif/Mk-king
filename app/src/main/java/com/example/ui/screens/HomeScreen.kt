@@ -63,7 +63,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.model.AgentItem
 import com.example.model.MasterToolItem
-import com.example.ui.components.MyraKyraOrbView
+import com.example.ui.components.MkKingOrbView
 import com.example.ui.theme.CrownGold
 import com.example.ui.theme.DarkBackground
 import com.example.ui.theme.DarkCardBorder
@@ -283,7 +283,7 @@ fun HomeScreen(
             // V3NOX ORB RED + LISTENING NOW PILL
             item {
                 Spacer(modifier = Modifier.height(4.dp))
-                MyraKyraOrbView(
+                MkKingOrbView(
                     avatarMode = avatarMode,
                     isSpeaking = isSpeaking,
                     isListening = isListening,

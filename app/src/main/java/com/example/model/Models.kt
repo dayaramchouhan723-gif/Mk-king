@@ -8,8 +8,8 @@ enum class GoddessType {
 }
 
 enum class AvatarMode(val title: String, val subtitle: String) {
-    V3NOX_ORB_RED("Mode 0: V3NOX Orb Red", "Red Glowing Orb 100dp with ▶️ Pulse"),
-    PARTICLE_GLOBE("Mode 1: Particle Globe 3D", "220+ Particles Red #FF0000 3D Orbiting"),
+    V3NOX_ORB_RED("Mode 0: V3NOX Orb Red", "Red Glowing Orb 100dp with Dual Neon Pulse"),
+    PARTICLE_GLOBE("Mode 1: Particle Globe 3D", "220dp Particle Globe • 220+ Particles Red #FF0000"),
     FLOATING_ORB("Mode 2: White Floating Orb 120dp", "Overlay Orb Floating Window VYRON"),
     ANIME_SS1("Mode 3: Full Body Anime SS-1", "White Blue Dress Galaxy Halo Lip-sync"),
     REALISTIC_SS2("Mode 4: Realistic Human SS-2", "Red Top Ribbed Blue Rim Light Lip-sync")
