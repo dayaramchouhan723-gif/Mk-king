@@ -1,4 +1,4 @@
-name: Build Myra Kyra APK
+name: Build MK KING APK
 on:
   push:
     branches: [ main ]
@@ -12,14 +12,42 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: gradle
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+      - name: Generate Debug Keystore FIX validateSigningDebug
+        run: |
+          mkdir -p ~/.android
+          if [ ! -f ~/.android/debug.keystore ]; then
+            keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          fi
+          cp ~/.android/debug.keystore ./debug.keystore || true
+          cp ~/.android/debug.keystore app/debug.keystore || true
       - name: Build Debug APK
         run: |
           chmod +x gradlew || true
-          if [ -f gradlew ]; then ./gradlew assembleDebug --no-daemon; else gradle assembleDebug --no-daemon; fi
-      - uses: actions/upload-artifact@v4
+          if [ -f ./gradlew ]; then ./gradlew assembleDebug --no-daemon --stacktrace; else gradle assembleDebug --no-daemon --stacktrace; fi
+      - name: Upload APK Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: Myra-Kyra-AI-v2.0-Dual-Goddess
+          name: MK-KING-V3.0-BY-DAYARAM-CHOUHAN
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 30
+      - name: Create Release with APK Download
+        if: success()
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: MK-KING-v3.0-BY-DAYARAM-CHOUHAN
+          name: MK KING v3.0 — Free Forever by Dayaram Chouhan
+          body: |
+            # MK KING 👑 v3.0 — Free Forever by Dayaram Chouhan
+            APK BUILD - DOWNLOAD APK MK-KING-V3.0-BY-DAYARAM-CHOUHAN.APK - 100% FREE FOREVER - NO PAYWALL
+            Direct APK Download - MK KING Voice Sunne Wala No Play Button Particle Globe 220dp 60fps
+            Features: V3NOX Particle Globe No Play Button, Hail MK KING Wake Word, 11-IN-1 Hub, 24 Master Tools, Free Forever 0₹
+            Developed by Dayaram Chouhan
+          files: app/build/outputs/apk/debug/*.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,6 +1,30 @@
 {
   "name": "MK KING 👑",
-  "description": "MK KING 👑 VOICE SUNNE WALA v3.0 - ROYAL COMMAND • Sub Designed by MK. 11-in-1 Multi-Agent Hub :: SONA CHOUHAN EMPIRE, V3NOX Orb Red, Voice Listening, Wake Word Hail MK KING, 24 Master Tools, and 20+ Voices.",
+  "description": "MK KING 👑 v3.0 — Free Forever by Dayaram Chouhan. Intelligent voice-first Android AI assistant. V3NOX Particle Globe No Play Button 220dp 800+ Particles, Hail MK KING Wake Word, 11-in-1 Hub, 24 Master Tools.",
+  "package": "com.mk.king.assistant",
+  "version": "3.0-MK-KING-Voice-Sunne-Wala",
+  "versionCode": 3,
+  "minSdk": 24,
+  "targetSdk": 33,
+  "compileSdk": 33,
+  "free_forever": true,
+  "download_apk": "MK-KING-V3.0-BY-DAYARAM-CHOUHAN.APK",
+  "direct_download": "Click Here to Download MK-KING-v3.0-by-Dayaram-Chouhan.apk",
+  "avatar": "V3NOX Particle Globe No Play Button 220dp 800+ Particles Pure Swirl 60fps",
+  "theme": "MK KING Red Black Gold No Play Button",
+  "empire": "SONA CHOUHAN EMPIRE",
+  "generated_from": "google.com/aistudio",
+  "author": "Dayaram Chouhan",
+  "repo": "dayaramchouhan723-gif/Mk-king",
+  "badges": [
+    "APK BUILD",
+    "REPO OR WORKFLOW NOT FOUND",
+    "DOWNLOAD APK MK-KING-V3.0-BY-DAYARAM-CHOUHAN.APK",
+    "100% FREE FOREVER",
+    "NO PAYWALL - UNLIMITED"
+  ],
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
