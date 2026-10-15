@@ -30,6 +30,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.ViewInAr
+import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -48,14 +49,16 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.model.AvatarMode
-import com.example.ui.theme.CyberRed
-import com.example.ui.theme.CyberRedGlow
-import com.example.ui.theme.SkyBlue
-import com.example.ui.theme.SkyBlueDeep
-import com.example.ui.theme.SkyBlueGlow
+import com.example.ui.theme.CrownGold
+import com.example.ui.theme.DarkCardBorder
+import com.example.ui.theme.NeonGreen
+import com.example.ui.theme.RedGlow
+import com.example.ui.theme.RoyalRed
+import com.example.ui.theme.TextSecondary
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -81,7 +84,7 @@ fun MyraKyraOrbView(
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "OrbAnimations")
 
-    // Pulse scale 1.0 to 1.15 infinite (1.5s)
+    // Pulse scale 1.0 to 1.15 infinite (1.5s ValueAnimator)
     val pulseScale by infiniteTransition.animateFloat(
         initialValue = 1.0f,
         targetValue = 1.15f,
@@ -114,20 +117,20 @@ fun MyraKyraOrbView(
         label = "GlobeRotation"
     )
 
-    // Strictly Red and Sky Blue Particles
+    // Red and Gold Royal Particles
     val particles = remember {
         val colors = listOf(
-            CyberRed, CyberRedGlow, Color(0xFFFF2255),
-            SkyBlue, SkyBlueGlow, Color(0xFF66E5FF)
+            RoyalRed, RedGlow, Color(0xFFFF1744), Color(0xFFFF5252),
+            CrownGold, Color(0xFFFFE082)
         )
         val rng = Random(42)
-        List(180) {
+        List(220) {
             GlobeParticle(
                 theta = rng.nextFloat() * 2f * PI.toFloat(),
                 phi = (rng.nextFloat() - 0.5f) * PI.toFloat(),
                 speed = 0.7f + rng.nextFloat() * 0.7f,
                 color = colors[rng.nextInt(colors.size)],
-                baseRadius = 2.2f + rng.nextFloat() * 3.8f
+                baseRadius = 2.0f + rng.nextFloat() * 3.6f
             )
         }
     }
@@ -135,10 +138,10 @@ fun MyraKyraOrbView(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 4.dp),
+            .padding(horizontal = 12.dp, vertical = 2.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Status Badges Header: Red & Sky Blue Theme
+        // Status Badges Header: MK KING Online Ready
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -146,8 +149,8 @@ fun MyraKyraOrbView(
         ) {
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = Color(0xFF101420),
-                border = BorderStroke(1.dp, if (isListening || isSpeaking) CyberRed else SkyBlue)
+                color = Color(0xFF160606),
+                border = BorderStroke(1.dp, if (isListening) NeonGreen else RoyalRed)
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
@@ -157,13 +160,13 @@ fun MyraKyraOrbView(
                         modifier = Modifier
                             .size(7.dp)
                             .clip(CircleShape)
-                            .background(if (isListening) CyberRed else if (isSpeaking) SkyBlueGlow else SkyBlue)
+                            .background(if (isListening) NeonGreen else RoyalRed)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = if (isListening) "V3NOX LISTENING..." else if (isSpeaking) "V3NOX SPEAKING..." else "VIRTUAL ASSISTANT ONLINE READY",
-                        color = if (isListening) CyberRed else SkyBlue,
-                        fontSize = 11.sp,
+                        text = if (isListening) "LISTENING • VOICE SUNNE WALA" else if (isSpeaking) "SPEAKING • ROYAL COMMAND" else "MK KING COMMAND ONLINE READY",
+                        color = if (isListening) NeonGreen else RoyalRed,
+                        fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -171,8 +174,8 @@ fun MyraKyraOrbView(
 
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = Color(0xFF18101C),
-                border = BorderStroke(1.dp, Brush.horizontalGradient(listOf(CyberRed, SkyBlue))),
+                color = Color(0xFF1E0C0C),
+                border = BorderStroke(1.dp, CrownGold.copy(alpha = 0.7f)),
                 modifier = Modifier
                     .clickable(onClick = onCycleAvatarMode)
                     .testTag("avatar_mode_toggle_button")
@@ -184,25 +187,25 @@ fun MyraKyraOrbView(
                     Icon(
                         imageVector = Icons.Default.ViewInAr,
                         contentDescription = "Switch Avatar",
-                        tint = SkyBlue,
+                        tint = CrownGold,
                         modifier = Modifier.size(13.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = avatarMode.title.split(":").firstOrNull() ?: "Avatar",
-                        color = Color.White,
+                        color = CrownGold,
                         fontSize = 11.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
         when (avatarMode) {
-            AvatarMode.V3NOX_DUAL_ORB -> {
-                V3noxDualOrbCore(
+            AvatarMode.V3NOX_ORB_RED -> {
+                MkKingV3noxOrbCore(
                     pulseScale = pulseScale * (1f + rmsLevel * 0.15f),
                     breathingScale = breathingScale,
                     rotationDeg = globeRotation,
@@ -228,52 +231,16 @@ fun MyraKyraOrbView(
                     onTap = onOrbTap
                 )
             }
-            AvatarMode.ANIME_MYRA -> {
+            AvatarMode.ANIME_SS1 -> {
                 AnimeGoddessMode(
-                    name = "SS-1 • Full Body Anime Myra (Red Halo)",
-                    haloColor = CyberRed,
-                    dressColor = Color(0xFFC2185B),
                     breathingScale = breathingScale,
                     isSpeaking = isSpeaking,
                     rmsLevel = rmsLevel,
                     onTap = onOrbTap
                 )
             }
-            AvatarMode.REALISTIC_MYRA -> {
+            AvatarMode.REALISTIC_SS2 -> {
                 RealisticGoddessMode(
-                    name = "SS-2 • Realistic Human Myra (Red Rim Light)",
-                    primaryRim = CyberRed,
-                    secondaryRim = SkyBlue,
-                    breathingScale = breathingScale,
-                    isSpeaking = isSpeaking,
-                    rmsLevel = rmsLevel,
-                    onTap = onOrbTap
-                )
-            }
-            AvatarMode.ANIME_KYRA -> {
-                AnimeGoddessMode(
-                    name = "SS-3 • Full Body Anime Kyra (Sky Blue Halo)",
-                    haloColor = SkyBlue,
-                    dressColor = Color(0xFF0077B6),
-                    breathingScale = breathingScale,
-                    isSpeaking = isSpeaking,
-                    rmsLevel = rmsLevel,
-                    onTap = onOrbTap
-                )
-            }
-            AvatarMode.REALISTIC_KYRA -> {
-                RealisticGoddessMode(
-                    name = "SS-4 • Realistic Human Kyra (Sky Blue Rim)",
-                    primaryRim = SkyBlue,
-                    secondaryRim = CyberRed,
-                    breathingScale = breathingScale,
-                    isSpeaking = isSpeaking,
-                    rmsLevel = rmsLevel,
-                    onTap = onOrbTap
-                )
-            }
-            AvatarMode.DUAL_FUSION -> {
-                DualGoddessFusionMode(
                     breathingScale = breathingScale,
                     isSpeaking = isSpeaking,
                     rmsLevel = rmsLevel,
@@ -282,24 +249,44 @@ fun MyraKyraOrbView(
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
-        // Dotted RMS Reactive Waveform (full width Red to Sky Blue)
+        // Dotted RMS Reactive Waveform (full width Red #FF0000 with green markers as in screenshot)
         DottedRmsWaveform(rmsLevel = rmsLevel, isSpeaking = isSpeaking || isListening)
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        Text(
-            text = "V3NOX DUAL ORB ACTIVE • RMS Reactive Voice Wave 48kHz • Red ♥️ & Sky Blue 🔵",
-            color = Color(0xFF718096),
-            fontSize = 10.sp,
-            fontWeight = FontWeight.Medium
-        )
+        // Voice Sunne Wala Bottom Label
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Voice: sunne wala • Hail MK KING wake word",
+                color = Color.White,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Surface(
+                shape = RoundedCornerShape(4.dp),
+                color = NeonGreen.copy(alpha = 0.2f),
+                border = BorderStroke(0.8.dp, NeonGreen)
+            ) {
+                Text(
+                    text = "ACTIVE",
+                    color = NeonGreen,
+                    fontSize = 8.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                )
+            }
+        }
     }
 }
 
 @Composable
-private fun V3noxDualOrbCore(
+private fun MkKingV3noxOrbCore(
     pulseScale: Float,
     breathingScale: Float,
     rotationDeg: Float,
@@ -313,10 +300,10 @@ private fun V3noxDualOrbCore(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Top label from screenshot
+        // Label from screenshot
         Text(
-            text = "V3NOX • DUAL ORB ACT/Blue • PULSE",
-            color = CyberRed,
+            text = "V3NOX • Top Red Orb 100dp PULSE",
+            color = RoyalRed,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 2.dp)
@@ -341,10 +328,10 @@ private fun V3noxDualOrbCore(
                     val globeRadius = size.width * 0.44f
                     val rotRad = (rotationDeg * PI / 180f).toFloat()
 
-                    // Faint radial dual boundary ring
+                    // Faint radial red glow
                     drawCircle(
                         brush = Brush.radialGradient(
-                            colors = listOf(CyberRed.copy(alpha = 0.12f), SkyBlue.copy(alpha = 0.15f), Color.Transparent),
+                            colors = listOf(RoyalRed.copy(alpha = 0.22f), Color.Transparent),
                             center = center,
                             radius = globeRadius * 1.15f
                         ),
@@ -352,7 +339,21 @@ private fun V3noxDualOrbCore(
                         center = center
                     )
 
-                    // Render Red and Sky Blue 3D orbiting particles
+                    // Green telemetry markings on globe edge (from screenshot wa_image_1789147253629151277)
+                    drawLine(
+                        color = NeonGreen.copy(alpha = 0.7f),
+                        start = Offset(center.x - globeRadius - 4.dp.toPx(), center.y - 10.dp.toPx()),
+                        end = Offset(center.x - globeRadius - 4.dp.toPx(), center.y + 10.dp.toPx()),
+                        strokeWidth = 2.dp.toPx()
+                    )
+                    drawLine(
+                        color = NeonGreen.copy(alpha = 0.7f),
+                        start = Offset(center.x + globeRadius + 4.dp.toPx(), center.y - 10.dp.toPx()),
+                        end = Offset(center.x + globeRadius + 4.dp.toPx(), center.y + 10.dp.toPx()),
+                        strokeWidth = 2.dp.toPx()
+                    )
+
+                    // Render 220+ 3D particles in Red & Gold
                     particles.forEach { p ->
                         val currentTheta = p.theta + rotRad * p.speed
                         val x3d = globeRadius * cos(p.phi) * sin(currentTheta)
@@ -372,7 +373,7 @@ private fun V3noxDualOrbCore(
                 }
             }
 
-            // Top Dual Orb (100dp) with Double Neon Ring: Red & Sky Blue
+            // Top Red Orb 100dp with center play triangle ▶️
             Box(
                 modifier = Modifier
                     .offset(y = (-30).dp)
@@ -381,23 +382,23 @@ private fun V3noxDualOrbCore(
                     .shadow(
                         elevation = 20.dp,
                         shape = CircleShape,
-                        spotColor = if (isListening) CyberRed else SkyBlue,
-                        ambientColor = if (isSpeaking) SkyBlueGlow else CyberRedGlow
+                        spotColor = RoyalRed,
+                        ambientColor = RedGlow
                     )
                     .clip(CircleShape)
                     .background(
                         brush = Brush.radialGradient(
                             colors = listOf(
-                                Color(0xFF24060E),
-                                Color(0xFF091624),
-                                Color(0xFF06080F)
+                                Color(0xFF380808),
+                                Color(0xFF1E0505),
+                                Color(0xFF0A0202)
                             )
                         )
                     )
                     .border(
                         width = 2.dp,
                         brush = Brush.sweepGradient(
-                            colors = listOf(CyberRed, SkyBlue, CyberRedGlow, SkyBlueGlow, CyberRed)
+                            colors = listOf(RoyalRed, RedGlow, Color(0xFFFF69B4), CrownGold, RoyalRed)
                         ),
                         shape = CircleShape
                     )
@@ -409,39 +410,69 @@ private fun V3noxDualOrbCore(
                     .testTag("v3nox_top_orb_button"),
                 contentAlignment = Alignment.Center
             ) {
-                // Inner Neon Ring
+                // Inner Double Neon Ring (Pink/Crimson #FF69B4)
                 Box(
                     modifier = Modifier
                         .size(76.dp)
                         .clip(CircleShape)
                         .border(
                             width = 1.5.dp,
-                            brush = Brush.sweepGradient(
-                                listOf(SkyBlue, CyberRed, SkyBlueGlow, CyberRedGlow, SkyBlue)
-                            ),
+                            color = Color(0xFFFF69B4),
                             shape = CircleShape
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    // Play triangle ▶️ center
+                    // Play triangle ▶️ center white
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = "Trigger Voice",
                         tint = Color.White,
-                        modifier = Modifier.size(34.dp)
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
+            }
+
+            // LISTENING NOW Pill - Exactly as in screenshot wa_image_1789147253629151277
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .offset(y = 10.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Color(0xFF000000))
+                    .border(1.2.dp, RoyalRed, RoundedCornerShape(16.dp))
+                    .padding(horizontal = 14.dp, vertical = 5.dp)
+                    .clickable(onClick = onTap)
+                    .testTag("listening_now_pill"),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "((•))",
+                        color = Color.White,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "LISTENING NOW",
+                        color = RoyalRed,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        letterSpacing = 0.5.sp
                     )
                 }
             }
         }
 
-        // Bottom label from screenshot
+        Spacer(modifier = Modifier.height(14.dp))
+
+        // Bottom Globe Label from screenshot
         Text(
-            text = "Bottom Particle Globe • 180dp • 800+ Particles\n#FF0000/#00D2FF • Spherical Orbiting",
-            color = SkyBlue,
+            text = "V3NOX Globe • 180dp • 800+ Particles\n#FF0000 / #0A0A0A • Spherical Orbiting",
+            color = RoyalRed,
             fontSize = 10.sp,
             fontWeight = FontWeight.Medium,
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-            modifier = Modifier.padding(top = 2.dp)
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -466,7 +497,7 @@ private fun ParticleGlobeFull(
 
             drawCircle(
                 brush = Brush.radialGradient(
-                    colors = listOf(CyberRed.copy(alpha = 0.22f), SkyBlue.copy(alpha = 0.18f), Color.Transparent),
+                    colors = listOf(RoyalRed.copy(alpha = 0.28f), Color.Transparent),
                     center = center,
                     radius = globeRadius * 1.2f
                 ),
@@ -510,14 +541,14 @@ private fun FloatingOrbMode(
             modifier = Modifier
                 .size(120.dp)
                 .scale(pulseScale)
-                .shadow(18.dp, CircleShape, spotColor = SkyBlue)
+                .shadow(18.dp, CircleShape, spotColor = RoyalRed)
                 .clip(CircleShape)
                 .background(
                     Brush.radialGradient(
-                        colors = listOf(Color.White, Color(0xFFE0F7FA), Color(0xFF80DEEA))
+                        colors = listOf(Color.White, Color(0xFFFFEBEE), Color(0xFFFFCDD2))
                     )
                 )
-                .border(2.5.dp, Brush.sweepGradient(listOf(CyberRed, SkyBlue, CyberRed)), CircleShape)
+                .border(2.5.dp, Brush.sweepGradient(listOf(RoyalRed, CrownGold, RoyalRed)), CircleShape)
                 .clickable(onClick = onTap),
             contentAlignment = Alignment.Center
         ) {
@@ -526,13 +557,13 @@ private fun FloatingOrbMode(
                     text = "VYRON",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = Color(0xFF0A101D)
+                    color = Color(0xFF1A0A0A)
                 )
                 Text(
                     text = "FLOATING ORB",
                     fontSize = 8.sp,
                     fontWeight = FontWeight.Bold,
-                    color = CyberRed
+                    color = RoyalRed
                 )
             }
         }
@@ -541,9 +572,6 @@ private fun FloatingOrbMode(
 
 @Composable
 private fun AnimeGoddessMode(
-    name: String,
-    haloColor: Color,
-    dressColor: Color,
     breathingScale: Float,
     isSpeaking: Boolean,
     rmsLevel: Float,
@@ -563,7 +591,7 @@ private fun AnimeGoddessMode(
             // Cosmic Halo
             drawCircle(
                 brush = Brush.radialGradient(
-                    colors = listOf(haloColor.copy(alpha = 0.35f), Color.Transparent),
+                    colors = listOf(CrownGold.copy(alpha = 0.35f), Color.Transparent),
                     center = Offset(cx, cy - 30f),
                     radius = 90.dp.toPx()
                 ),
@@ -573,18 +601,14 @@ private fun AnimeGoddessMode(
 
             // Halo Ring
             drawCircle(
-                brush = Brush.sweepGradient(listOf(CyberRed, SkyBlue, CyberRed)),
+                brush = Brush.sweepGradient(listOf(RoyalRed, CrownGold, RoyalRed)),
                 radius = 65.dp.toPx(),
                 center = Offset(cx, cy - 40f),
                 style = Stroke(width = 3.dp.toPx())
             )
 
             // Head Silhouette
-            drawCircle(
-                color = Color(0xFFFDE8E8),
-                radius = 32.dp.toPx(),
-                center = Offset(cx, cy - 20f)
-            )
+            drawCircle(color = Color(0xFFFDE8E8), radius = 32.dp.toPx(), center = Offset(cx, cy - 20f))
 
             // Hair Strands
             val hairPath = Path().apply {
@@ -594,21 +618,21 @@ private fun AnimeGoddessMode(
                 lineTo(cx - 42.dp.toPx(), cy + 40f)
                 close()
             }
-            drawPath(hairPath, color = dressColor)
+            drawPath(hairPath, color = Color(0xFF1E88E5))
 
             // Eyes
-            drawCircle(color = CyberRed, radius = 3.5.dp.toPx(), center = Offset(cx - 12.dp.toPx(), cy - 22f))
-            drawCircle(color = SkyBlue, radius = 3.5.dp.toPx(), center = Offset(cx + 12.dp.toPx(), cy - 22f))
+            drawCircle(color = RoyalRed, radius = 3.5.dp.toPx(), center = Offset(cx - 12.dp.toPx(), cy - 22f))
+            drawCircle(color = RoyalRed, radius = 3.5.dp.toPx(), center = Offset(cx + 12.dp.toPx(), cy - 22f))
 
             // Lip-sync Mouth
             val mouthHeight = if (isSpeaking) (3f + rmsLevel * 12f).dp.toPx() else 2.dp.toPx()
             drawOval(
-                color = CyberRed,
+                color = RoyalRed,
                 topLeft = Offset(cx - 6.dp.toPx(), cy - 4f),
                 size = androidx.compose.ui.geometry.Size(12.dp.toPx(), mouthHeight)
             )
 
-            // Dress
+            // White Blue Dress with Golden Border Bow
             val dressPath = Path().apply {
                 moveTo(cx - 45.dp.toPx(), cy + 60.dp.toPx())
                 lineTo(cx - 16.dp.toPx(), cy + 18.dp.toPx())
@@ -616,27 +640,24 @@ private fun AnimeGoddessMode(
                 lineTo(cx + 45.dp.toPx(), cy + 60.dp.toPx())
                 close()
             }
-            drawPath(dressPath, color = dressColor)
-            drawPath(dressPath, color = SkyBlue, style = Stroke(width = 2.dp.toPx()))
+            drawPath(dressPath, color = Color(0xFFE3F2FD))
+            drawPath(dressPath, color = CrownGold, style = Stroke(width = 2.dp.toPx()))
         }
 
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .background(Color(0xCC070912), RoundedCornerShape(8.dp))
-                .border(1.dp, Brush.horizontalGradient(listOf(CyberRed, SkyBlue)), RoundedCornerShape(8.dp))
+                .background(Color(0xCC1A0A0A), RoundedCornerShape(8.dp))
+                .border(1.dp, RoyalRed, RoundedCornerShape(8.dp))
                 .padding(horizontal = 8.dp, vertical = 2.dp)
         ) {
-            Text(name, color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+            Text("MODE 3 • Full Body Anime SS-1 (Galaxy Halo)", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
         }
     }
 }
 
 @Composable
 private fun RealisticGoddessMode(
-    name: String,
-    primaryRim: Color,
-    secondaryRim: Color,
     breathingScale: Float,
     isSpeaking: Boolean,
     rmsLevel: Float,
@@ -655,7 +676,7 @@ private fun RealisticGoddessMode(
 
             drawCircle(
                 brush = Brush.radialGradient(
-                    colors = listOf(primaryRim.copy(alpha = 0.35f), secondaryRim.copy(alpha = 0.2f), Color.Transparent),
+                    colors = listOf(RoyalRed.copy(alpha = 0.35f), Color.Transparent),
                     center = Offset(cx, cy),
                     radius = 95.dp.toPx()
                 ),
@@ -668,26 +689,16 @@ private fun RealisticGoddessMode(
                 lineTo(cx, cy + 22.dp.toPx())
                 lineTo(cx + 50.dp.toPx(), cy + 55.dp.toPx())
             }
-            drawPath(chestPath, color = primaryRim, style = Stroke(width = 4.dp.toPx()))
+            drawPath(chestPath, color = RoyalRed, style = Stroke(width = 4.dp.toPx()))
 
             drawCircle(color = Color(0xFFE2E8F0), radius = 34.dp.toPx(), center = Offset(cx, cy - 15f))
 
-            drawArc(
-                color = secondaryRim,
-                startAngle = 180f,
-                sweepAngle = 180f,
-                useCenter = false,
-                topLeft = Offset(cx - 36.dp.toPx(), cy - 50.dp.toPx()),
-                size = androidx.compose.ui.geometry.Size(72.dp.toPx(), 70.dp.toPx()),
-                style = Stroke(width = 3.dp.toPx())
-            )
-
-            drawCircle(color = CyberRed, radius = 3.dp.toPx(), center = Offset(cx - 13.dp.toPx(), cy - 18f))
-            drawCircle(color = SkyBlue, radius = 3.dp.toPx(), center = Offset(cx + 13.dp.toPx(), cy - 18f))
+            drawCircle(color = RoyalRed, radius = 3.dp.toPx(), center = Offset(cx - 13.dp.toPx(), cy - 18f))
+            drawCircle(color = RoyalRed, radius = 3.dp.toPx(), center = Offset(cx + 13.dp.toPx(), cy - 18f))
 
             val lipHeight = if (isSpeaking) (2.5f + rmsLevel * 10f).dp.toPx() else 2.dp.toPx()
             drawOval(
-                color = CyberRed,
+                color = RoyalRed,
                 topLeft = Offset(cx - 7.dp.toPx(), cy - 1f),
                 size = androidx.compose.ui.geometry.Size(14.dp.toPx(), lipHeight)
             )
@@ -696,77 +707,11 @@ private fun RealisticGoddessMode(
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .background(Color(0xCC070912), RoundedCornerShape(8.dp))
-                .border(1.dp, Brush.horizontalGradient(listOf(primaryRim, secondaryRim)), RoundedCornerShape(8.dp))
+                .background(Color(0xCC1A0A0A), RoundedCornerShape(8.dp))
+                .border(1.dp, RoyalRed, RoundedCornerShape(8.dp))
                 .padding(horizontal = 8.dp, vertical = 2.dp)
         ) {
-            Text(name, color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
-        }
-    }
-}
-
-@Composable
-private fun DualGoddessFusionMode(
-    breathingScale: Float,
-    isSpeaking: Boolean,
-    rmsLevel: Float,
-    onTap: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .height(210.dp)
-            .fillMaxWidth()
-            .clickable(onClick = onTap),
-        contentAlignment = Alignment.Center
-    ) {
-        Canvas(modifier = Modifier.fillMaxSize().scale(breathingScale)) {
-            val cx = size.width / 2f
-            val cy = size.height / 2f
-
-            // Left Myra Halo (Red)
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(CyberRed.copy(alpha = 0.35f), Color.Transparent),
-                    center = Offset(cx - 38.dp.toPx(), cy),
-                    radius = 65.dp.toPx()
-                ),
-                radius = 60.dp.toPx(),
-                center = Offset(cx - 38.dp.toPx(), cy)
-            )
-
-            // Right Kyra Halo (Sky Blue)
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(SkyBlue.copy(alpha = 0.35f), Color.Transparent),
-                    center = Offset(cx + 38.dp.toPx(), cy),
-                    radius = 65.dp.toPx()
-                ),
-                radius = 60.dp.toPx(),
-                center = Offset(cx + 38.dp.toPx(), cy)
-            )
-
-            // Intersecting Crown Core
-            drawCircle(
-                brush = Brush.sweepGradient(listOf(CyberRed, SkyBlue, CyberRed)),
-                radius = 24.dp.toPx(),
-                center = Offset(cx, cy),
-                style = Stroke(width = 2.5.dp.toPx())
-            )
-
-            // Myra Left Silhouette
-            drawCircle(color = CyberRed, radius = 18.dp.toPx(), center = Offset(cx - 38.dp.toPx(), cy - 10f))
-            // Kyra Right Silhouette
-            drawCircle(color = SkyBlue, radius = 18.dp.toPx(), center = Offset(cx + 38.dp.toPx(), cy - 10f))
-        }
-
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .background(Color(0xCC070912), RoundedCornerShape(8.dp))
-                .border(1.dp, Brush.horizontalGradient(listOf(CyberRed, SkyBlue)), RoundedCornerShape(8.dp))
-                .padding(horizontal = 8.dp, vertical = 2.dp)
-        ) {
-            Text("Mode 7 • Dual Goddess Fusion (Myra ♥️ + Kyra 🔵 Together)", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+            Text("MODE 4 • Realistic Human SS-2 (Red Top Ribbed)", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -776,7 +721,7 @@ private fun DottedRmsWaveform(
     rmsLevel: Float,
     isSpeaking: Boolean
 ) {
-    val dotCount = 52
+    val dotCount = 60
 
     Canvas(
         modifier = Modifier
@@ -788,6 +733,20 @@ private fun DottedRmsWaveform(
         val cy = size.height / 2f
         val activeRms = if (isSpeaking) rmsLevel.coerceAtLeast(0.18f) else 0.06f
 
+        // Draw green edge markings as in screenshot wa_image_1789147253629151277
+        drawLine(
+            color = NeonGreen,
+            start = Offset(4.dp.toPx(), 4.dp.toPx()),
+            end = Offset(4.dp.toPx(), size.height - 4.dp.toPx()),
+            strokeWidth = 2.dp.toPx()
+        )
+        drawLine(
+            color = NeonGreen,
+            start = Offset(size.width - 4.dp.toPx(), 4.dp.toPx()),
+            end = Offset(size.width - 4.dp.toPx(), size.height - 4.dp.toPx()),
+            strokeWidth = 2.dp.toPx()
+        )
+
         for (i in 0 until dotCount) {
             val progress = i.toFloat() / dotCount
             val x = spacing * (i + 1)
@@ -796,14 +755,10 @@ private fun DottedRmsWaveform(
             val dotHeight = (3.dp.toPx() + (size.height * 0.75f * activeRms * kotlin.math.abs(wavePhase)))
                 .coerceIn(2.5.dp.toPx(), size.height)
 
-            // Gradient strictly from Red #FF0033 to Sky Blue #00D2FF
-            val dotColor = when {
-                progress < 0.50f -> CyberRed
-                else -> SkyBlue
-            }
+            val dotColor = if (i % 7 == 0 && activeRms > 0.15f) NeonGreen else RoyalRed
 
             drawCircle(
-                color = dotColor.copy(alpha = (0.5f + activeRms * 0.5f).coerceIn(0.25f, 1f)),
+                color = dotColor.copy(alpha = (0.55f + activeRms * 0.45f).coerceIn(0.25f, 1f)),
                 radius = (dotHeight / 4.5f).coerceIn(1.8.dp.toPx(), 4.dp.toPx()),
                 center = Offset(x, cy)
             )

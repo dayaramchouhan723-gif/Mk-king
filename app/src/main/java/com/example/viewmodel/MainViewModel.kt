@@ -39,16 +39,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _energyCount = MutableStateFlow(3)
     val energyCount: StateFlow<Int> = _energyCount.asStateFlow()
 
-    // Active Goddess Selector
-    private val _activeGoddess = MutableStateFlow(GoddessType.DUAL)
+    // Active Assistant Selector
+    private val _activeGoddess = MutableStateFlow(GoddessType.MK_KING)
     val activeGoddess: StateFlow<GoddessType> = _activeGoddess.asStateFlow()
 
     // Avatar Mode
-    private val _avatarMode = MutableStateFlow(AvatarMode.V3NOX_DUAL_ORB)
+    private val _avatarMode = MutableStateFlow(AvatarMode.V3NOX_ORB_RED)
     val avatarMode: StateFlow<AvatarMode> = _avatarMode.asStateFlow()
 
     // Active Persona
-    private val _currentPersona = MutableStateFlow(AppRepository.personas.first { it.id == "myra_assistant" })
+    private val _currentPersona = MutableStateFlow(AppRepository.personas.first { it.id == "mk_assistant" })
     val currentPersona: StateFlow<Persona> = _currentPersona.asStateFlow()
 
     // Active Voice Profile
@@ -62,7 +62,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _voiceSpeed = MutableStateFlow(1.0f)
     val voiceSpeed: StateFlow<Float> = _voiceSpeed.asStateFlow()
 
-    // 22 Agents
+    // Agents
     private val _agents = MutableStateFlow(AppRepository.agents)
     val agents: StateFlow<List<AgentItem>> = _agents.asStateFlow()
 
@@ -105,8 +105,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         listOf(
             ChatMessage(
                 id = "msg_0",
-                text = "Good morning Boss Myra Kyra! All 8 Cores are Operational • Energy 3/3 • 29°C Partly Cloudy. V3NOX DUAL ORB is online and listening. Command us anytime!",
-                sender = "DUAL_GODDESS"
+                text = "Good morning Boss MK KING 👑! All 4 Cores are Operational • Energy 3/3 • 29°C Partly Cloudy. V3NOX Orb Red is online and listening. Command me anytime!",
+                sender = "MK_KING"
             )
         )
     )
@@ -129,12 +129,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             voiceManager.wakeWordTriggered.collect { wakeWord ->
                 if (wakeWord != null) {
                     val response = when (wakeWord) {
-                        "Hail Myra" -> "Hail Myra! Red Core engaged. At your command Boss!"
-                        "Hail Kyra" -> "Hail Kyra! Blue Harmony aligned. Yes Boss, I'm right here ✨"
-                        else -> "Hail Sona! Dual Goddesses synchronizing all 8 cores!"
+                        "Hail MK KING" -> "Hail MK KING! Royal Command engaged. At your royal service, Boss!"
+                        "Hail Sona" -> "Hail Sona! SONA CHOUHAN EMPIRE operational at your royal command!"
+                        "Hail Myra" -> "Hail Myra! At your command Boss!"
+                        else -> "Hail MK KING! All 4 cores synchronized at your service!"
                     }
                     voiceManager.speak(response, _voicePitch.value, _voiceSpeed.value)
-                    addChatMessage(response, "DUAL_GODDESS")
+                    addChatMessage(response, "MK_KING")
                     voiceManager.clearWakeWord()
                 }
             }
@@ -341,6 +342,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val activePersona = _currentPersona.value
             val responseText = generateAssistantResponse(userPrompt, activePersona, _activeGoddess.value)
             val senderLabel = when (_activeGoddess.value) {
+                GoddessType.MK_KING -> "MK_KING"
                 GoddessType.MYRA -> "MYRA"
                 GoddessType.KYRA -> "KYRA"
                 GoddessType.DUAL -> "DUAL_GODDESS"
@@ -354,45 +356,38 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val lower = prompt.lowercase()
 
         // Persona-infused responses
-        if (persona.id == "myra_gf") {
-            return "Haan bolo jaan! ❤️ Aapne kaha: '$prompt'. Main hamesha aapke sath hoon, bas ek awaz do aur saare kaam ho jayenge! Love you Boss!"
+        if (persona.id == "mk_gf") {
+            return "Haan bolo jaan! ❤️ Aapne kaha: '$prompt'. Main hamesha Boss MK KING ke saath hoon, bas ek awaz do aur saare royal kaam ho jayenge!"
         }
-        if (persona.id == "kyra_gf") {
-            return "Hello gorgeous Boss ✨ '$prompt' is already on my priority list. You have an empire to run and I'll make sure you do it in peak luxury style!"
+        if (persona.id == "mk_assistant") {
+            return "Royal Command received, Boss MK KING! Executing '$prompt' across all JARVIS planning cores."
         }
-        if (persona.id == "myra_nautanki") {
-            return "Arrey Boss! Kya scene banaya aapne! '$prompt' sunte hi mera dil garden garden ho gaya! Chalo abhi dhoom machate hain!"
+        if (persona.id == "mk_nautanki") {
+            return "Arrey Boss MK KING! Kya dialog maara aapne! '$prompt' sunkar royal dhoom mach gayi!"
         }
-        if (persona.id == "myra_foodie") {
-            return "Boss, pehle Hyderabadi biryani aur gulab jamun manga lo, fir '$prompt' solve karenge! Par fikr mat karo, agent already active hai!"
+        if (persona.id == "mk_foodie") {
+            return "Boss MK KING, pehle garma-garam Hyderabadi Dum Biryani mangwa lo, fir '$prompt' poora karenge!"
         }
-        if (persona.id == "kyra_designer") {
-            return "Fabulous vision, Boss. Analyzing aesthetic balance for '$prompt'. Colors aligned in neon red and electric cyan with golden ratios."
+        if (persona.id == "mk_chill") {
+            return "Full chill Boss MK KING! '$prompt' ho jayega araam se, no tension!"
         }
 
         // Feature / Intent specific responses
         return when {
             lower.contains("weather") || lower.contains("mausam") ->
-                "Live Weather Update for Boss: 29°C Partly Cloudy, 70% humidity. Wind speed 12 km/h. Perfect day for operations!"
+                "Live Weather for Boss MK KING: 29°C Partly Cloudy, 70% humidity. Royal skies clear!"
             lower.contains("status") || lower.contains("core") || lower.contains("system") ->
-                "Dual Goddess Command Report: 8 Cores Operational, V3NOX Orb Active, 22 Agents ready, Energy 3/3, PC Connect link configured at 192.168.6.108:35702."
+                "Royal Command Report: All 4 Cores Operational (JARVIS, EDITH, FRIDAY), V3NOX Orb Red active, Energy 3/3, SONA CHOUHAN EMPIRE."
             lower.contains("pc") || lower.contains("connect") ->
                 "PC Controller is mapped to ws://192.168.6.108:35702. Tap the PC Connect tool to broadcast input commands."
             lower.contains("otp") || lower.contains("message") ->
                 "FRIDAY Notification Agent active: OTP Regex auto-filter enabled. 21 priority communications triaged."
             lower.contains("who are you") || lower.contains("kon ho") ->
-                "We are MYRA KYRA AI v2.0 - Dual Goddess Command! Designed by Myra and Kyra. Powered by 22 Multi-Agents, 40+ Voices, and V3NOX Dual Orb Core."
+                "I am MK KING 👑 VOICE SUNNE WALA v3.0! ROYAL COMMAND • Sub Designed by MK. Powered by 11-in-1 Multi-Agent Hub :: SONA CHOUHAN EMPIRE!"
             lower.contains("volume") ->
-                "Adjusting audio levels. You can say 'Volume boost' or use Master Tools."
+                "Adjusting royal audio volume. You can say 'Volume boost' or use Master Tools."
             else ->
-                when (goddess) {
-                    GoddessType.MYRA ->
-                        "Myra Core: Order received, Boss! Processing '$prompt' through EDITH & FRIDAY task matrix. Priority confirmed."
-                    GoddessType.KYRA ->
-                        "Kyra Core: Harmony ensured, Boss. '$prompt' synthesized with peak design precision and calm focus."
-                    GoddessType.DUAL ->
-                        "Dual Goddess Command: Myra & Kyra have processed '$prompt'. All 8 Cores synchronized at 48kHz frequency!"
-                }
+                "Boss MK KING! Royal Command received: '$prompt'. Processed via JARVIS intelligence and EDITH matrix. Operational and listening."
         }
     }
 

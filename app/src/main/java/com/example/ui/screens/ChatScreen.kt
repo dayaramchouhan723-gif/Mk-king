@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.model.ChatMessage
 import com.example.model.GoddessType
+import com.example.ui.theme.CrownGold
 import com.example.ui.theme.DarkBackground
 import com.example.ui.theme.DarkCardBorder
 import com.example.ui.theme.DarkSurface
@@ -65,6 +66,7 @@ import com.example.ui.theme.KyraPink
 import com.example.ui.theme.KyraPurple
 import com.example.ui.theme.MyraGreen
 import com.example.ui.theme.MyraRed
+import com.example.ui.theme.RoyalRed
 import com.example.ui.theme.TextPrimary
 import com.example.ui.theme.TextSecondary
 import com.example.viewmodel.MainViewModel
@@ -120,12 +122,16 @@ fun ChatScreen(
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = if (activeGoddess == GoddessType.MYRA) "MYRA COMMAND"
-                            else if (activeGoddess == GoddessType.KYRA) "KYRA HARMONY"
-                            else "DUAL GODDESS COMMAND",
+                            text = when (activeGoddess) {
+                                GoddessType.MK_KING -> "MK KING 👑 ROYAL COMMAND"
+                                GoddessType.MYRA -> "MYRA COMMAND"
+                                GoddessType.KYRA -> "KYRA HARMONY"
+                                GoddessType.DUAL -> "DUAL GODDESS COMMAND"
+                            },
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 15.sp,
                             color = when (activeGoddess) {
+                                GoddessType.MK_KING -> CrownGold
                                 GoddessType.MYRA -> MyraRed
                                 GoddessType.KYRA -> KyraBlue
                                 GoddessType.DUAL -> KyraCyan
@@ -312,6 +318,7 @@ private fun ChatMessageItem(
     val alignment = if (isUser) Alignment.End else Alignment.Start
     val containerColor = when (message.sender) {
         "USER" -> Color(0xFF1E2438)
+        "MK_KING" -> Color(0xFF2E0A0A)
         "MYRA" -> Color(0xFF200A10)
         "KYRA" -> Color(0xFF0C1628)
         "DUAL_GODDESS" -> Color(0xFF160F26)
@@ -320,6 +327,7 @@ private fun ChatMessageItem(
 
     val borderColor = when (message.sender) {
         "USER" -> KyraBlue.copy(alpha = 0.5f)
+        "MK_KING" -> RoyalRed.copy(alpha = 0.8f)
         "MYRA" -> MyraRed.copy(alpha = 0.6f)
         "KYRA" -> KyraBlue.copy(alpha = 0.6f)
         "DUAL_GODDESS" -> KyraCyan.copy(alpha = 0.7f)
@@ -328,6 +336,7 @@ private fun ChatMessageItem(
 
     val senderName = when (message.sender) {
         "USER" -> "Boss"
+        "MK_KING" -> "MK KING 👑 (Royal Red Core)"
         "MYRA" -> "MYRA (Red Core)"
         "KYRA" -> "KYRA (Blue Core)"
         "DUAL_GODDESS" -> "MYRA KYRA (Dual Goddess)"
@@ -344,6 +353,7 @@ private fun ChatMessageItem(
             fontWeight = FontWeight.Bold,
             color = when (message.sender) {
                 "USER" -> KyraCyan
+                "MK_KING" -> CrownGold
                 "MYRA" -> MyraRed
                 "KYRA" -> KyraBlue
                 "DUAL_GODDESS" -> KyraPink

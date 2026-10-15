@@ -7,7 +7,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,24 +26,22 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bolt
-import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.Computer
-import androidx.compose.material.icons.filled.MenuBook
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Mood
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Stars
 import androidx.compose.material.icons.filled.ViewInAr
-import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -54,9 +51,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -64,24 +58,20 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.model.AgentItem
-import com.example.model.GoddessType
 import com.example.model.MasterToolItem
 import com.example.ui.components.MyraKyraOrbView
-import com.example.ui.theme.CyberRed
-import com.example.ui.theme.CyberRedGlow
+import com.example.ui.theme.CrownGold
 import com.example.ui.theme.DarkBackground
 import com.example.ui.theme.DarkCardBorder
 import com.example.ui.theme.DarkSurface
 import com.example.ui.theme.GoldAccent
-import com.example.ui.theme.MyraGreen
-import com.example.ui.theme.OrangeBadge
-import com.example.ui.theme.SkyBlue
-import com.example.ui.theme.SkyBlueGlow
+import com.example.ui.theme.NeonGreen
+import com.example.ui.theme.RedGlow
+import com.example.ui.theme.RoyalRed
 import com.example.ui.theme.TextPrimary
 import com.example.ui.theme.TextSecondary
 import com.example.viewmodel.MainViewModel
@@ -96,7 +86,6 @@ fun HomeScreen(
     val isListening by viewModel.voiceManager.isRecognizing.collectAsState()
     val rmsLevel by viewModel.voiceManager.rmsLevel.collectAsState()
     val avatarMode by viewModel.avatarMode.collectAsState()
-    val activeGoddess by viewModel.activeGoddess.collectAsState()
     val energyCount by viewModel.energyCount.collectAsState()
     val isVipUnlocked by viewModel.isVipUnlocked.collectAsState()
     val agents by viewModel.agents.collectAsState()
@@ -111,8 +100,6 @@ fun HomeScreen(
     val pcPin by viewModel.pcPin.collectAsState()
     val pcStatus by viewModel.pcStatus.collectAsState()
 
-    var agentFilter by remember { mutableStateOf<GoddessType?>(null) }
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -122,13 +109,11 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 100.dp)
         ) {
-            // BRAND HEADER (Screenshot 4 exact layout: Red & Sky Blue)
+            // BRAND HEADER: Exactly as in screenshot wa_image_1789147253629151277
             item {
-                BrandHeaderSection(
+                MkKingHeaderSection(
                     energyCount = energyCount,
                     isVip = isVipUnlocked,
-                    activeGoddess = activeGoddess,
-                    onSelectGoddess = { viewModel.setGoddess(it) },
                     onShow3DAvatar = { viewModel.cycleAvatarMode() }
                 )
             }
@@ -145,7 +130,7 @@ fun HomeScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 4.dp)
                             .background(
-                                Brush.horizontalGradient(listOf(CyberRed, SkyBlue)),
+                                Brush.horizontalGradient(listOf(RoyalRed, RedGlow)),
                                 RoundedCornerShape(10.dp)
                             )
                             .padding(horizontal = 14.dp, vertical = 8.dp),
@@ -161,63 +146,86 @@ fun HomeScreen(
                 }
             }
 
-            // GREETING & MULTI-AGENT HUB TITLE
+            // GREETING CARD: Good morning Boss MK KING 👑
             item {
-                Column(
+                Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = DarkSurface),
+                    border = BorderStroke(1.2.dp, RoyalRed.copy(alpha = 0.7f))
                 ) {
-                    Text(
-                        text = "Good morning Boss Myra Kyra",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Black,
-                        color = Color.White
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Surface(
-                        shape = RoundedCornerShape(14.dp),
-                        color = Color(0xFF121422),
-                        border = BorderStroke(1.dp, Brush.horizontalGradient(listOf(CyberRed, SkyBlue)))
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 14.dp, vertical = 10.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Good morning Boss MK KING",
+                                fontSize = 17.sp,
+                                fontWeight = FontWeight.Black,
+                                color = RoyalRed
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "👑",
+                                fontSize = 17.sp
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "✨ 22-IN-1 DUAL MULTI-AGENT HUB • MYRA KYRA EMPIRE ✨",
+                            text = "11-IN-1 MULTI-AGENT HUB :: SONA CHOUHAN EMPIRE",
                             fontSize = 10.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = SkyBlue,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+                            fontWeight = FontWeight.Bold,
+                            color = CrownGold
                         )
                     }
                 }
             }
 
-            // TOP CORE: PLANNING & INTELLIGENCE AGENTS (Row 1 & 2 cards)
+            // TOP CORE: JARVIS (Intelligence & Planning Agents)
             item {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
+                        .padding(horizontal = 16.dp, vertical = 4.dp)
                 ) {
-                    Text(
-                        text = "TOP CORE • MYRA KYRA Intelligence Planning Agents",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextSecondary,
-                        modifier = Modifier.padding(bottom = 6.dp)
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "TOP CORE : JARVIS",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Black,
+                            color = RoyalRed
+                        )
+                        Text(
+                            text = "Intelligence & Planning Agents",
+                            fontSize = 10.sp,
+                            color = TextSecondary
+                        )
+                    }
 
-                    // Row 1: Tasks Agent (Red) & Calendar Agent (Sky Blue)
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    // Row 1: Tasks Agent & Calendar Agent (Red borders, LIVE badges)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        TopCoreCard(
+                        JarvisCoreCard(
                             title = "Tasks Agent",
-                            subtitle = "Manage boss priorities • mission checklists • smart deadlines",
+                            subtitle = "Manage boss priorities, mission checklists and smart deadlines.",
                             badgeText = "LIVE",
-                            badgeColor = MyraGreen,
-                            borderColor = CyberRed,
+                            icon = Icons.Default.Checklist,
                             modifier = Modifier.weight(1f),
                             onClick = {
                                 val a = agents.firstOrNull { it.id == "tasks_agent" }
@@ -225,12 +233,11 @@ fun HomeScreen(
                             }
                         )
 
-                        TopCoreCard(
+                        JarvisCoreCard(
                             title = "Calendar Agent",
-                            subtitle = "Sync calendars • agendas • reminders • meetings",
-                            badgeText = "SYNC",
-                            badgeColor = SkyBlue,
-                            borderColor = SkyBlue,
+                            subtitle = "Sync calendar agendas, schedule boss meetings and time-blocks.",
+                            badgeText = "LIVE",
+                            icon = Icons.Default.CalendarMonth,
                             modifier = Modifier.weight(1f),
                             onClick = {
                                 val a = agents.firstOrNull { it.id == "calendar_agent" }
@@ -239,19 +246,18 @@ fun HomeScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
 
-                    // Row 2: Weather Live & Mood Agents
+                    // Row 2: Weather Live & Empire Mood
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        TopCoreCard(
+                        JarvisMiniCard(
                             title = "Weather Live",
-                            subtitle = "29° Partly cloudy • 70% humidity",
+                            subtitle = "29° Partly cloudy • 70%",
+                            icon = Icons.Default.Cloud,
                             badgeText = "LIVE",
-                            badgeColor = MyraGreen,
-                            borderColor = CyberRed,
                             modifier = Modifier.weight(1f),
                             onClick = {
                                 val a = agents.firstOrNull { it.id == "weather_agent" }
@@ -259,28 +265,14 @@ fun HomeScreen(
                             }
                         )
 
-                        TopCoreCard(
-                            title = "Myra Mood Agent",
-                            subtitle = "Happy • Upbeat • Wed 14 Oct",
+                        JarvisMiniCard(
+                            title = "Empire Mood",
+                            subtitle = "Happy Upbeat • Wed, 14 Oct",
+                            icon = Icons.Default.Mood,
                             badgeText = "SYNC",
-                            badgeColor = CyberRed,
-                            borderColor = CyberRed,
                             modifier = Modifier.weight(1f),
                             onClick = {
-                                val a = agents.firstOrNull { it.id == "myra_mood" }
-                                a?.let { viewModel.selectAgent(it) }
-                            }
-                        )
-
-                        TopCoreCard(
-                            title = "Kyra Mood Agent",
-                            subtitle = "Calm • Focus • Balanced",
-                            badgeText = "SYNC",
-                            badgeColor = SkyBlue,
-                            borderColor = SkyBlue,
-                            modifier = Modifier.weight(1f),
-                            onClick = {
-                                val a = agents.firstOrNull { it.id == "kyra_mood" }
+                                val a = agents.firstOrNull { it.id == "empire_mood" }
                                 a?.let { viewModel.selectAgent(it) }
                             }
                         )
@@ -288,9 +280,9 @@ fun HomeScreen(
                 }
             }
 
-            // V3NOX DUAL ORB & AVATAR VIEW (Red & Sky Blue)
+            // V3NOX ORB RED + LISTENING NOW PILL
             item {
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 MyraKyraOrbView(
                     avatarMode = avatarMode,
                     isSpeaking = isSpeaking,
@@ -313,12 +305,13 @@ fun HomeScreen(
                 )
             }
 
-            // RESUME & WELCOME BACK CARD
+            // RESUME & WELCOME BACK CARD: Exactly as in screenshot
             item {
+                Spacer(modifier = Modifier.height(4.dp))
                 WelcomeBackCard(
                     onContinue = onNavigateToChat,
                     onNewChat = {
-                        viewModel.addChatMessage("Starting fresh session with Boss Myra Kyra.", "SYSTEM")
+                        viewModel.addChatMessage("Starting fresh session with Boss MK KING.", "SYSTEM")
                         onNavigateToChat()
                     }
                 )
@@ -326,7 +319,7 @@ fun HomeScreen(
 
             // 24 MASTER TOOLS QUICK LAUNCH
             item {
-                Spacer(modifier = Modifier.height(18.dp))
+                Spacer(modifier = Modifier.height(14.dp))
                 Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -335,41 +328,35 @@ fun HomeScreen(
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                text = "✨ 24 MASTER TOOLS",
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = Color.White
+                                text = "24 MASTER TOOLS",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Black,
+                                color = RoyalRed
                             )
                             Text(
                                 text = " • Quick Launch",
-                                fontSize = 14.sp,
+                                fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = SkyBlue
+                                color = CrownGold
                             )
                         }
                         Surface(
-                            shape = RoundedCornerShape(8.dp),
-                            color = SkyBlue.copy(alpha = 0.15f),
-                            border = BorderStroke(1.dp, SkyBlue.copy(alpha = 0.5f))
+                            shape = RoundedCornerShape(6.dp),
+                            color = RoyalRed.copy(alpha = 0.2f),
+                            border = BorderStroke(1.dp, RoyalRed)
                         ) {
                             Text(
                                 text = "Launch",
-                                color = SkyBlue,
+                                color = RoyalRed,
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                             )
                         }
                     }
-                    Text(
-                        text = "One-tap automation & system device triggers",
-                        fontSize = 11.sp,
-                        color = TextSecondary
-                    )
                 }
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                // Row 1 of tools (12 tools)
                 val row1 = viewModel.masterTools.take(12)
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
@@ -383,7 +370,6 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Row 2 of tools (12 tools)
                 val row2 = viewModel.masterTools.drop(12)
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
@@ -396,28 +382,17 @@ fun HomeScreen(
                 }
             }
 
-            // MY TRIGGERS & HARDWARE GUARDS
+            // MY TRIGGERS & GUARDS
             item {
-                Spacer(modifier = Modifier.height(18.dp))
+                Spacer(modifier = Modifier.height(14.dp))
                 Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "⚙️ My Triggers",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = CyberRed
-                        )
-                        Text(
-                            text = "Battery Optimization • Notification OTP • Exact Alarm",
-                            fontSize = 10.sp,
-                            color = TextSecondary
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "🛠️ My Triggers",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = RoyalRed
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
 
                     val triggers by viewModel.triggers.collectAsState()
                     triggers.forEach { trig ->
@@ -430,9 +405,9 @@ fun HomeScreen(
                 }
             }
 
-            // BATCH UPDATE v1.0.66 (Red to Sky Blue Gradient)
+            // BATCH UPDATE v1.0.66
             item {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
                 BatchUpdateCard(
                     systemUpdate = systemUpdate,
                     wifiEngine = wifiEngine,
@@ -443,18 +418,18 @@ fun HomeScreen(
                 )
             }
 
-            // 22 MULTI-AGENTS EXPANDED SECTION (EDITH, KYRA Special Agent, FRIDAY)
+            // EXTRA AGENTS (EDITH CORE & FRIDAY CORE)
             item {
-                Spacer(modifier = Modifier.height(20.dp))
-                MultiAgentHubSection(
+                Spacer(modifier = Modifier.height(16.dp))
+                ExtraAgentsSection(
                     agents = agents,
                     onSelectAgent = { viewModel.selectAgent(it) }
                 )
             }
 
-            // PC CONTROLLER QUICK CARD
+            // PC CONTROLLER
             item {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(14.dp))
                 PcControllerQuickCard(
                     ip = pcIp,
                     pin = pcPin,
@@ -479,11 +454,9 @@ fun HomeScreen(
 }
 
 @Composable
-private fun BrandHeaderSection(
+private fun MkKingHeaderSection(
     energyCount: Int,
     isVip: Boolean,
-    activeGoddess: GoddessType,
-    onSelectGoddess: (GoddessType) -> Unit,
     onShow3DAvatar: () -> Unit
 ) {
     Column(
@@ -491,59 +464,39 @@ private fun BrandHeaderSection(
             .fillMaxWidth()
             .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 4.dp)
     ) {
-        // Badges Row
+        // Top line: ACTIVE AVATAR & Show 3D Avatar pill (from screenshot)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Surface(
-                shape = RoundedCornerShape(8.dp),
-                color = OrangeBadge.copy(alpha = 0.2f),
-                border = BorderStroke(1.dp, OrangeBadge)
-            ) {
-                Text(
-                    text = "0₹ FREE LIFETIME",
-                    color = OrangeBadge,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                )
-            }
+            Text(
+                text = "ACTIVE AVATAR: PARTICLE GLOBE",
+                color = RoyalRed,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold
+            )
 
             Surface(
-                shape = RoundedCornerShape(8.dp),
-                color = SkyBlue.copy(alpha = 0.2f),
-                border = BorderStroke(1.dp, SkyBlue)
+                shape = RoundedCornerShape(10.dp),
+                color = Color(0xFF220808),
+                border = BorderStroke(1.dp, RoyalRed),
+                modifier = Modifier.clickable(onClick = onShow3DAvatar)
             ) {
-                Text(
-                    text = "DUAL GODDESS COMMAND",
-                    color = SkyBlue,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                )
-            }
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Default.Bolt,
-                    contentDescription = "Energy",
-                    tint = SkyBlue,
-                    modifier = Modifier.size(14.dp)
-                )
-                Text(
-                    text = "$energyCount/3 Energy",
-                    color = SkyBlue,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Default.ViewInAr, "3D", tint = RoyalRed, modifier = Modifier.size(13.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Show 3D Avatar", color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                }
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-        // Title with Pure Red & Sky Blue Dual Gradient
+        // Main Title Row: MK KING 👑 + 0₹ FREE LIFETIME + 3 Energy
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -552,150 +505,76 @@ private fun BrandHeaderSection(
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "MYRA ",
+                        text = "MK KING ",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Black,
-                        color = CyberRed
+                        color = RoyalRed
                     )
                     Text(
-                        text = "KYRA ",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Black,
-                        color = SkyBlue
-                    )
-                    Text(
-                        text = "v2.0",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Color.White
+                        text = "👑",
+                        fontSize = 22.sp
                     )
                 }
                 Text(
-                    text = "Designed by Myra & Kyra • ACTIVE AVATAR PARTICLE GLOBE DUAL",
+                    text = "ROYAL COMMAND • Sub Designed by MK",
                     fontSize = 10.sp,
-                    color = TextSecondary
+                    color = TextSecondary,
+                    fontWeight = FontWeight.Medium
                 )
             }
 
-            if (isVip) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Surface(
-                    shape = RoundedCornerShape(10.dp),
-                    color = GoldAccent.copy(alpha = 0.2f),
-                    border = BorderStroke(1.dp, GoldAccent)
+                    shape = RoundedCornerShape(6.dp),
+                    color = Color.Black,
+                    border = BorderStroke(1.dp, RoyalRed)
+                ) {
+                    Text(
+                        text = "0₹ FREE LIFETIME",
+                        color = Color.White,
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                Surface(
+                    shape = RoundedCornerShape(14.dp),
+                    color = Color(0xFF220808),
+                    border = BorderStroke(1.dp, RoyalRed)
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Default.Stars, "VIP", tint = GoldAccent, modifier = Modifier.size(13.dp))
-                        Spacer(modifier = Modifier.width(3.dp))
-                        Text("VIP OMG", color = GoldAccent, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                        Icon(Icons.Default.Bolt, "Energy", tint = RoyalRed, modifier = Modifier.size(13.dp))
+                        Spacer(modifier = Modifier.width(2.dp))
+                        Text("$energyCount Energy", color = RoyalRed, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
         }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // Show 3D Avatar Center Pill Button
-        Surface(
-            shape = RoundedCornerShape(12.dp),
-            color = Color(0xFF141A28),
-            border = BorderStroke(1.dp, Brush.horizontalGradient(listOf(CyberRed, SkyBlue))),
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .clickable(onClick = onShow3DAvatar)
-                .testTag("show_3d_avatar_center_button")
-        ) {
-            Row(
-                modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(Icons.Default.ViewInAr, "3D", tint = SkyBlue, modifier = Modifier.size(14.dp))
-                Spacer(modifier = Modifier.width(6.dp))
-                Text("Show 3D Avatar", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // Goddess Mode Toggle: DUAL vs MYRA (Red) vs KYRA (Sky Blue)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFF0F131D), RoundedCornerShape(12.dp))
-                .border(1.dp, DarkCardBorder, RoundedCornerShape(12.dp))
-                .padding(3.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            GoddessTabItem(
-                title = "⚡ DUAL GODDESS",
-                isSelected = activeGoddess == GoddessType.DUAL,
-                activeColor = SkyBlue,
-                onClick = { onSelectGoddess(GoddessType.DUAL) }
-            )
-            GoddessTabItem(
-                title = "♥️ MYRA CORE",
-                isSelected = activeGoddess == GoddessType.MYRA,
-                activeColor = CyberRed,
-                onClick = { onSelectGoddess(GoddessType.MYRA) }
-            )
-            GoddessTabItem(
-                title = "🔵 KYRA CORE",
-                isSelected = activeGoddess == GoddessType.KYRA,
-                activeColor = SkyBlue,
-                onClick = { onSelectGoddess(GoddessType.KYRA) }
-            )
-        }
     }
 }
 
 @Composable
-private fun GoddessTabItem(
-    title: String,
-    isSelected: Boolean,
-    activeColor: Color,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(9.dp))
-            .background(if (isSelected) activeColor.copy(alpha = 0.35f) else Color.Transparent)
-            .border(
-                width = if (isSelected) 1.dp else 0.dp,
-                color = if (isSelected) activeColor else Color.Transparent,
-                shape = RoundedCornerShape(9.dp)
-            )
-            .clickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 6.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = title,
-            color = if (isSelected) Color.White else TextSecondary,
-            fontSize = 11.sp,
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-        )
-    }
-}
-
-@Composable
-private fun TopCoreCard(
+private fun JarvisCoreCard(
     title: String,
     subtitle: String,
     badgeText: String,
-    badgeColor: Color,
-    borderColor: Color,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Card(
         modifier = modifier
             .clickable(onClick = onClick)
-            .testTag("top_core_${title.replace(" ", "_")}"),
+            .testTag("core_${title.replace(" ", "_")}"),
         shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF10131E)),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.6f))
+        colors = CardDefaults.cardColors(containerColor = DarkSurface),
+        border = BorderStroke(1.2.dp, RoyalRed)
     ) {
         Column(modifier = Modifier.padding(10.dp)) {
             Row(
@@ -703,29 +582,31 @@ private fun TopCoreCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = title,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color.White,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Icon(icon, title, tint = RoyalRed, modifier = Modifier.size(18.dp))
                 Surface(
                     shape = RoundedCornerShape(4.dp),
-                    color = badgeColor.copy(alpha = 0.2f)
+                    color = RoyalRed
                 ) {
                     Text(
                         text = badgeText,
                         fontSize = 8.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = badgeColor,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.White,
                         modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = title,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+
+            Spacer(modifier = Modifier.height(2.dp))
 
             Text(
                 text = subtitle,
@@ -740,6 +621,39 @@ private fun TopCoreCard(
 }
 
 @Composable
+private fun JarvisMiniCard(
+    title: String,
+    subtitle: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    badgeText: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = modifier
+            .clickable(onClick = onClick)
+            .testTag("mini_${title.replace(" ", "_")}"),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = DarkSurface),
+        border = BorderStroke(1.dp, RoyalRed.copy(alpha = 0.8f))
+    ) {
+        Column(modifier = Modifier.padding(8.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(icon, title, tint = RoyalRed, modifier = Modifier.size(16.dp))
+                Text(badgeText, color = RoyalRed, fontSize = 8.sp, fontWeight = FontWeight.Bold)
+            }
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(title, color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+            Text(subtitle, color = TextSecondary, fontSize = 8.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+    }
+}
+
+@Composable
 private fun WelcomeBackCard(
     onContinue: () -> Unit,
     onNewChat: () -> Unit
@@ -747,48 +661,57 @@ private fun WelcomeBackCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 6.dp),
-        shape = RoundedCornerShape(20.dp),
+            .padding(horizontal = 16.dp, vertical = 4.dp),
+        shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(containerColor = DarkSurface),
-        border = BorderStroke(1.2.dp, Brush.horizontalGradient(listOf(CyberRed.copy(alpha = 0.7f), SkyBlue.copy(alpha = 0.7f))))
+        border = BorderStroke(1.2.dp, RoyalRed)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(14.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "Welcome back Boss Myra Kyra",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color.White
-                )
-                Surface(
-                    shape = RoundedCornerShape(6.dp),
-                    color = SkyBlue.copy(alpha = 0.2f),
-                    border = BorderStroke(1.dp, SkyBlue.copy(alpha = 0.6f))
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.History, "History", tint = RoyalRed, modifier = Modifier.size(16.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "LAST SESSION SUMMARY",
-                        color = SkyBlue,
-                        fontSize = 8.sp,
+                        text = "Welcome back Boss MK KING",
+                        fontSize = 13.sp,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                        color = Color.White
                     )
                 }
+                Text("Last you were in Home", color = TextSecondary, fontSize = 9.sp)
             }
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            Text(
-                text = "Boss Myra • Hail Myra • Hail Kyra • At your command Boss • all 8 cores operational • Energy 3/3 • 29°C Partly cloudy • Mood Happy Upbeat • Focus ✓",
-                color = TextSecondary,
-                fontSize = 11.sp,
-                lineHeight = 15.sp
-            )
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFF0F0404),
+                border = BorderStroke(0.8.dp, DarkCardBorder),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(8.dp)) {
+                    Text("LAST SESSION SUMMARY", color = RoyalRed, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = "Boss MK KING: Hail MK KING. Dilber: At your command Boss, all 4 cores are operational.",
+                        color = TextPrimary,
+                        fontSize = 10.sp,
+                        lineHeight = 14.sp
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "⚡ Energy: 3/3  ☁️ 29°C Partly cloudy  😊 Mood: Happy Upbeat",
+                        color = CrownGold,
+                        fontSize = 9.sp
+                    )
+                }
+            }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -796,23 +719,23 @@ private fun WelcomeBackCard(
             ) {
                 OutlinedButton(
                     onClick = onNewChat,
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = CyberRed),
-                    border = BorderStroke(1.dp, CyberRed),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = RoyalRed),
+                    border = BorderStroke(1.dp, RoyalRed),
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier.testTag("new_chat_button")
                 ) {
-                    Text("New Chat", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Text("New Chat", fontSize = 11.sp, fontWeight = FontWeight.Bold)
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Button(
                     onClick = onContinue,
-                    colors = ButtonDefaults.buttonColors(containerColor = SkyBlue, contentColor = Color(0xFF070B14)),
+                    colors = ButtonDefaults.buttonColors(containerColor = RoyalRed, contentColor = Color.White),
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier.testTag("continue_session_button")
                 ) {
-                    Text("Continue", fontSize = 12.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("Continue", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
                 }
             }
         }
@@ -832,7 +755,7 @@ private fun MasterToolChip(
     ) {
         Box(
             modifier = Modifier
-                .size(52.dp)
+                .size(50.dp)
                 .clip(CircleShape)
                 .background(Color(tool.colorHex).copy(alpha = 0.22f))
                 .border(1.5.dp, Color(tool.colorHex), CircleShape),
@@ -842,14 +765,14 @@ private fun MasterToolChip(
                 text = tool.name.take(2).uppercase(),
                 color = Color(tool.colorHex),
                 fontWeight = FontWeight.ExtraBold,
-                fontSize = 13.sp
+                fontSize = 12.sp
             )
         }
         Spacer(modifier = Modifier.height(3.dp))
         Text(
             text = tool.name,
             color = Color.White,
-            fontSize = 10.sp,
+            fontSize = 9.sp,
             fontWeight = FontWeight.Medium,
             maxLines = 1
         )
@@ -863,41 +786,41 @@ private fun TriggerCardItem(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF101420)),
-        border = BorderStroke(1.dp, if (trigger.isGranted) SkyBlue.copy(alpha = 0.4f) else CyberRed.copy(alpha = 0.4f))
+        shape = RoundedCornerShape(10.dp),
+        colors = CardDefaults.cardColors(containerColor = DarkSurface),
+        border = BorderStroke(1.dp, if (trigger.isGranted) NeonGreen.copy(alpha = 0.4f) else RoyalRed.copy(alpha = 0.5f))
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = trigger.title,
-                    fontSize = 12.sp,
+                    fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
                 Text(
                     text = trigger.description,
-                    fontSize = 10.sp,
+                    fontSize = 9.sp,
                     color = TextSecondary,
                     maxLines = 2
                 )
             }
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(6.dp))
             Button(
                 onClick = onToggle,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (trigger.isGranted) SkyBlue else CyberRed,
-                    contentColor = if (trigger.isGranted) Color(0xFF070B14) else Color.White
+                    containerColor = if (trigger.isGranted) NeonGreen else RoyalRed,
+                    contentColor = if (trigger.isGranted) Color.Black else Color.White
                 ),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(6.dp)
             ) {
-                Text(if (trigger.isGranted) "Granted" else "Grant", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                Text(if (trigger.isGranted) "Granted" else "Grant", fontSize = 10.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -916,45 +839,26 @@ private fun BatchUpdateCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1C0D24)),
-        border = BorderStroke(1.2.dp, Brush.horizontalGradient(listOf(CyberRed, SkyBlue)))
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF220808)),
+        border = BorderStroke(1.dp, RoyalRed)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(14.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
-                    Text(
-                        text = "Batch Update v1.0.66",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Color.White
-                    )
-                    Text(
-                        text = "System updates & dual goddess core modules",
-                        fontSize = 10.sp,
-                        color = TextSecondary
-                    )
-                }
-                Surface(
-                    shape = RoundedCornerShape(6.dp),
-                    color = SkyBlue.copy(alpha = 0.2f),
-                    border = BorderStroke(1.dp, SkyBlue)
-                ) {
-                    Text(
-                        text = "READY",
-                        color = SkyBlue,
-                        fontSize = 9.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                    )
-                }
+                Text(
+                    text = "Batch Update v1.0.66",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color.White
+                )
+                Text("READY", color = RoyalRed, fontSize = 9.sp, fontWeight = FontWeight.Bold)
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -965,7 +869,7 @@ private fun BatchUpdateCard(
                 Switch(
                     checked = systemUpdate,
                     onCheckedChange = { onToggleUpdate() },
-                    colors = SwitchDefaults.colors(checkedThumbColor = CyberRed, checkedTrackColor = CyberRed.copy(alpha = 0.4f))
+                    colors = SwitchDefaults.colors(checkedThumbColor = RoyalRed, checkedTrackColor = RoyalRed.copy(alpha = 0.4f))
                 )
             }
 
@@ -978,20 +882,7 @@ private fun BatchUpdateCard(
                 Switch(
                     checked = wifiEngine,
                     onCheckedChange = { onToggleWifi() },
-                    colors = SwitchDefaults.colors(checkedThumbColor = SkyBlue, checkedTrackColor = SkyBlue.copy(alpha = 0.4f))
-                )
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("Beta Experimental Cores", color = Color.White, fontSize = 11.sp)
-                Switch(
-                    checked = betaFeatures,
-                    onCheckedChange = { onToggleBeta() },
-                    colors = SwitchDefaults.colors(checkedThumbColor = SkyBlueGlow, checkedTrackColor = SkyBlueGlow.copy(alpha = 0.4f))
+                    colors = SwitchDefaults.colors(checkedThumbColor = RoyalRed, checkedTrackColor = RoyalRed.copy(alpha = 0.4f))
                 )
             }
         }
@@ -999,7 +890,7 @@ private fun BatchUpdateCard(
 }
 
 @Composable
-private fun MultiAgentHubSection(
+private fun ExtraAgentsSection(
     agents: List<AgentItem>,
     onSelectAgent: (AgentItem) -> Unit
 ) {
@@ -1008,81 +899,48 @@ private fun MultiAgentHubSection(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    text = "⚙️ MYRA KYRA 4-CORE EXTRA AGENTS",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color.White
-                )
-                Text(
-                    text = "22 AGENTS ACTIVE • Voice Library 40+ Voices",
-                    fontSize = 10.sp,
-                    color = SkyBlue
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // EDITH CARD (Vision, Media, Memory, OCR, WiFi)
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF10131E)),
-            border = BorderStroke(1.dp, CyberRed.copy(alpha = 0.5f))
-        ) {
-            Column(modifier = Modifier.padding(14.dp)) {
-                Text("EDITH CORE", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = CyberRed)
-                Text("Vision • Media • Memory • Files • Media Launcher Agent • OCR Scan Agent • WiFi Agent • Memories Voice Free", fontSize = 11.sp, color = TextSecondary, lineHeight = 15.sp)
-            }
-        }
+        Text(
+            text = "MYRA 4-CORE EXTRA AGENTS • 11 AGENTS ACTIVE",
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Black,
+            color = RoyalRed
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // KYRA SPECIAL AGENT CARD
+        // EDITH CARD
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF101524)),
-            border = BorderStroke(1.dp, SkyBlue.copy(alpha = 0.5f))
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(containerColor = DarkSurface),
+            border = BorderStroke(1.dp, RoyalRed.copy(alpha = 0.6f))
         ) {
-            Column(modifier = Modifier.padding(14.dp)) {
-                Text("KYRA SPECIAL AGENT", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = SkyBlue)
-                Text("Design • Beauty • Fashion • Aesthetic • UI/UX • Avatar Studio • Haute Couture Curation", fontSize = 11.sp, color = TextSecondary, lineHeight = 15.sp)
+            Column(modifier = Modifier.padding(12.dp)) {
+                Text("EDITH CORE", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = RoyalRed)
+                Text("Vision • Media • Memory • Files • Media Launcher Agent • OCR Scan Agent • WiFi Agent • Memories Voice Free", fontSize = 10.sp, color = TextSecondary, lineHeight = 14.sp)
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
-        // FRIDAY CARD (Communication & Notifications)
+        // FRIDAY CARD
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF12121E)),
-            border = BorderStroke(1.dp, Brush.horizontalGradient(listOf(CyberRed, SkyBlue)))
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(containerColor = DarkSurface),
+            border = BorderStroke(1.dp, RoyalRed.copy(alpha = 0.6f))
         ) {
-            Column(modifier = Modifier.padding(14.dp)) {
+            Column(modifier = Modifier.padding(12.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("FRIDAY CORE • Communication & Notifications", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                    Surface(
-                        shape = RoundedCornerShape(6.dp),
-                        color = CyberRed.copy(alpha = 0.2f)
-                    ) {
-                        Text("V3NOX 21 new msgs", color = CyberRed, fontSize = 8.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
-                    }
+                    Text("Communication • Notifications", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text("V3N0X 21 new messages", color = RoyalRed, fontSize = 8.sp, fontWeight = FontWeight.Bold)
                 }
-                Spacer(modifier = Modifier.height(4.dp))
-                Text("WhatsApp • SMS • Call • Email Notifications • OTP Agent Missions • OTP regex • File Manager • Open App", fontSize = 11.sp, color = TextSecondary, lineHeight = 15.sp)
+                Spacer(modifier = Modifier.height(2.dp))
+                Text("WhatsApp • SMS • Call • Email • Notifications • OTP Missions • OTP regex • File Manager • Open App", fontSize = 10.sp, color = TextSecondary, lineHeight = 14.sp)
             }
         }
     }
@@ -1099,54 +957,36 @@ private fun PcControllerQuickCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF101524)),
-        border = BorderStroke(1.dp, SkyBlue.copy(alpha = 0.5f))
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = DarkSurface),
+        border = BorderStroke(1.dp, RoyalRed.copy(alpha = 0.6f))
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(14.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Computer, "PC", tint = SkyBlue, modifier = Modifier.size(18.dp))
+                    Icon(Icons.Default.Computer, "PC", tint = RoyalRed, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("PC Connect & Controller", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                    Text("PC Connect & Controller", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
                 }
-                Surface(
-                    shape = RoundedCornerShape(6.dp),
-                    color = SkyBlue.copy(alpha = 0.2f),
-                    border = BorderStroke(1.dp, SkyBlue)
-                ) {
-                    Text(
-                        text = "ws://$ip:$pin",
-                        color = SkyBlue,
-                        fontSize = 9.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                    )
-                }
+                Text("ws://$ip:$pin", color = CrownGold, fontSize = 9.sp, fontWeight = FontWeight.SemiBold)
             }
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(4.dp))
+            Text("Status: $status", color = if (status.contains("CONNECTED")) NeonGreen else TextSecondary, fontSize = 10.sp)
 
-            Text(
-                text = "Status: $status",
-                color = if (status.contains("CONNECTED")) SkyBlue else TextSecondary,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Medium
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Button(
                 onClick = onConnect,
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = SkyBlue, contentColor = Color(0xFF070B14)),
-                shape = RoundedCornerShape(10.dp)
+                colors = ButtonDefaults.buttonColors(containerColor = RoyalRed, contentColor = Color.White),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                Text("Test Connection to PC Bridge", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Text("Test Connection to PC Bridge", fontSize = 11.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -1161,42 +1001,19 @@ private fun AgentDetailDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = agent.name,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
-            }
+            Text(agent.name, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
         },
         text = {
             Column {
-                Text(
-                    text = "Goddess Core: ${if (agent.goddess == GoddessType.MYRA) "MYRA (Red Core)" else "KYRA (Sky Blue Core)"}",
-                    color = if (agent.goddess == GoddessType.MYRA) CyberRed else SkyBlue,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Text(agent.role, color = RoyalRed, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Role: ${agent.role}",
-                    color = TextSecondary,
-                    fontSize = 11.sp
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = agent.description,
-                    color = Color.White,
-                    fontSize = 13.sp,
-                    lineHeight = 18.sp
-                )
+                Text(agent.description, color = Color.White, fontSize = 12.sp, lineHeight = 16.sp)
             }
         },
         confirmButton = {
             Button(
                 onClick = onExecute,
-                colors = ButtonDefaults.buttonColors(containerColor = SkyBlue, contentColor = Color(0xFF070B14))
+                colors = ButtonDefaults.buttonColors(containerColor = RoyalRed, contentColor = Color.White)
             ) {
                 Text("Execute Directive", fontWeight = FontWeight.Bold)
             }
@@ -1207,6 +1024,6 @@ private fun AgentDetailDialog(
             }
         },
         containerColor = DarkSurface,
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(14.dp)
     )
 }

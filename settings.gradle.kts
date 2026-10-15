@@ -22,6 +22,6 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "MYRA KYRA AI"
+rootProject.name = "MK KING"
 
 include(":app")

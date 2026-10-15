@@ -5,19 +5,17 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-private val DualGoddessColorScheme = darkColorScheme(
-    primary = MyraRed,
+private val MkKingColorScheme = darkColorScheme(
+    primary = RoyalRed,
     onPrimary = Color.White,
-    primaryContainer = Color(0xFF3B0D14),
-    onPrimaryContainer = Color(0xFFFFDADE),
-    secondary = KyraBlue,
-    onSecondary = Color.White,
-    secondaryContainer = Color(0xFF0F2B48),
-    onSecondaryContainer = Color(0xFFD1E4FF),
-    tertiary = MyraGreen,
+    primaryContainer = Color(0xFF380808),
+    onPrimaryContainer = Color(0xFFFFD5D5),
+    secondary = CrownGold,
+    onSecondary = Color.Black,
+    secondaryContainer = Color(0xFF382A00),
+    onSecondaryContainer = Color(0xFFFFECB3),
+    tertiary = NeonGreen,
     onTertiary = Color.Black,
-    tertiaryContainer = Color(0xFF00391E),
-    onTertiaryContainer = Color(0xFF67FFA7),
     background = DarkBackground,
     onBackground = TextPrimary,
     surface = DarkSurface,
@@ -32,7 +30,7 @@ fun MyApplicationTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colorScheme = DualGoddessColorScheme,
+        colorScheme = MkKingColorScheme,
         typography = Typography,
         content = content
     )

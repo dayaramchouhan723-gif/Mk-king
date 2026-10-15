@@ -51,8 +51,7 @@ import com.example.ui.theme.KyraBlue
 import com.example.ui.theme.KyraCyan
 import com.example.ui.theme.CyberRed
 import com.example.ui.theme.SkyBlue
-import com.example.ui.theme.MyraGreen
-import com.example.ui.theme.MyraRed
+import com.example.ui.theme.RoyalRed
 import com.example.ui.theme.MyApplicationTheme
 import com.example.viewmodel.MainViewModel
 
@@ -117,8 +116,8 @@ fun MainAppContainer(viewModel: MainViewModel) {
                     },
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Color.White,
-                        selectedTextColor = MyraRed,
-                        indicatorColor = MyraRed,
+                        selectedTextColor = RoyalRed,
+                        indicatorColor = RoyalRed,
                         unselectedIconColor = Color(0xFF888898),
                         unselectedTextColor = Color(0xFF888898)
                     ),
@@ -143,8 +142,8 @@ fun MainAppContainer(viewModel: MainViewModel) {
                     },
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Color.White,
-                        selectedTextColor = KyraCyan,
-                        indicatorColor = KyraBlue,
+                        selectedTextColor = RoyalRed,
+                        indicatorColor = RoyalRed,
                         unselectedIconColor = Color(0xFF888898),
                         unselectedTextColor = Color(0xFF888898)
                     ),
@@ -169,8 +168,8 @@ fun MainAppContainer(viewModel: MainViewModel) {
                     },
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Color.White,
-                        selectedTextColor = CyberRed,
-                        indicatorColor = CyberRed,
+                        selectedTextColor = RoyalRed,
+                        indicatorColor = RoyalRed,
                         unselectedIconColor = Color(0xFF888898),
                         unselectedTextColor = Color(0xFF888898)
                     ),
@@ -195,8 +194,8 @@ fun MainAppContainer(viewModel: MainViewModel) {
                     },
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Color.White,
-                        selectedTextColor = SkyBlue,
-                        indicatorColor = SkyBlue,
+                        selectedTextColor = RoyalRed,
+                        indicatorColor = RoyalRed,
                         unselectedIconColor = Color(0xFF888898),
                         unselectedTextColor = Color(0xFF888898)
                     ),
@@ -221,8 +220,8 @@ fun MainAppContainer(viewModel: MainViewModel) {
                     },
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Color.White,
-                        selectedTextColor = SkyBlue,
-                        indicatorColor = SkyBlue,
+                        selectedTextColor = RoyalRed,
+                        indicatorColor = RoyalRed,
                         unselectedIconColor = Color(0xFF888898),
                         unselectedTextColor = Color(0xFF888898)
                     ),

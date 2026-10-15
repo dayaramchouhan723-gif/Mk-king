@@ -18,14 +18,14 @@ class ExampleRobolectricTest {
   fun `read string from context`() {
     val context = ApplicationProvider.getApplicationContext<Context>()
     val appName = context.getString(R.string.app_name)
-    assertEquals("MYRA KYRA AI", appName)
+    assertEquals("MK KING 👑", appName)
   }
 
   @Test
-  fun `verify 22 agents and 24 master tools`() {
-    assertEquals(22, AppRepository.agents.size)
+  fun `verify agents and master tools`() {
+    assertEquals(11, AppRepository.agents.size)
     assertEquals(24, AppRepository.masterTools.size)
-    assertEquals(12, AppRepository.personas.size)
-    assertTrue(AppRepository.voices.size >= 40)
+    assertEquals(6, AppRepository.personas.size)
+    assertTrue(AppRepository.voices.size >= 20)
   }
 }

@@ -198,9 +198,10 @@ class VoiceManager(private val context: Context) : TextToSpeech.OnInitListener {
     private fun checkForWakeWords(text: String) {
         val lower = text.lowercase()
         when {
+            lower.contains("hail mk king") || lower.contains("hail mk") -> _wakeWordTriggered.value = "Hail MK KING"
+            lower.contains("hail sona") -> _wakeWordTriggered.value = "Hail Sona"
             lower.contains("hail myra") -> _wakeWordTriggered.value = "Hail Myra"
             lower.contains("hail kyra") -> _wakeWordTriggered.value = "Hail Kyra"
-            lower.contains("hail sona") -> _wakeWordTriggered.value = "Hail Sona"
         }
     }
 
